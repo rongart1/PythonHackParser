@@ -1,8 +1,5 @@
 from enum import Enum
-from fileinput import filename
 from io import TextIOWrapper
-
-from _typeshed import FileDescriptorOrPath
 
 
 class InstuctionType(Enum):
@@ -13,25 +10,41 @@ class InstuctionType(Enum):
 
 
 class Parser:
-    def __init__(self, fileName: FileDescriptorOrPath) -> None:
+
+    def __init__(self, fileName) -> None:
         with open(fileName, "r") as f:
-            self.file: TextIOWrapper = f
-            self.instruction: str = ""
+            self.lines = f.readlines()
+            self.current = 0
+            self._cleanWhiteSpace_()
+            self.instruction: str = self.lines[0]
+
 
     def hasMoreLines(self) -> bool:
-        currentPos = self.file.tell()
-        line = self.file.readline()
-        self.file.seek(currentPos)
-        return len(line) != 0
-
-    def advance(self):
-        isInstuction = False
-        while not isInstuction:
-            line = self.file.readline().strip()
-            if not line.startswith("//"):
-                self.instruction = line
-                isInstuction = True
+        return self.current < len(self.lines)-1
 
     def getInstructionType(self):
-        if not self.instruction:
-            return
+        return self._getInstructionType_(self.instruction)
+
+    def _cleanWhiteSpace_(self):
+        for line in self.lines.copy():
+            trimed = line.strip()
+            instructionType = self._getInstructionType_(trimed)
+            #removing filler lines like comments and empty
+            if(instructionType == InstuctionType.nInstruction):
+                self.lines.remove(line)
+
+
+    def advance(self):
+        self.current += 1
+        self.instruction = self.lines[self.current]
+
+
+
+    def _getInstructionType_(self,instruction:str):
+        if not instruction or instruction.__contains__('/'):
+            return InstuctionType.nInstruction
+        if instruction.startswith('(') and instruction.endswith(')'):
+            return InstuctionType.lInstuction
+        if instruction.startswith('@'):
+            return InstuctionType.aInstruction
+        return InstuctionType.cInstruction
