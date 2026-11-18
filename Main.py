@@ -1,14 +1,15 @@
-import Parser
-import os
+import sys
 
-base = os.path.dirname(os.path.abspath(__file__))
-path = os.path.join(base, "testFiles", "max", "max.asm")
+from HackAssembler import HackAssembler
 
-parser = Parser.Parser(path)
+if __name__ == "__main__":
+    args = sys.argv[1:]
 
-while parser.hasMoreLines():
-    sym = parser.getSymbol()
-    print(f'{parser.current}: {parser.instruction}    label: {sym}    C-parts: {parser.getCinstuctionParts()}')
-    parser.advance()
+    if len(args) != 1:
+        print("Usage: python Main.py <file.asm>")
+        sys.exit(1)
 
-print(parser.lines)
+    assembler = HackAssembler(args[0])
+
+    assembler.assemble()
+    assembler.emitToFile()
