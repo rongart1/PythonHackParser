@@ -1,0 +1,22 @@
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Submission archive and metadata
+*.zip
+authors.txt
+lang.txt
+
+# Test programs and generated .hack output
+add/
+max/
+pong/
+rect/
+testFiles/
+*.hack
+
+# Editor / OS clutter
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -22,8 +22,10 @@ class Parser:
     def hasMoreLines(self) -> bool:
         return self.current < len(self.lines) - 1
 
-    def hasLine(self) -> bool:
-        return self.current < len(self.lines)
+    def reset(self):
+        """resets the instruction to instruction 0"""
+        self.current = -1
+        self.advance()
 
     def _getInstructionType_(self, instruction: str):
         if not instruction or instruction.__contains__("/"):

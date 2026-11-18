@@ -3,6 +3,13 @@ class SymbolTable:
         self.table = {}
         for i in range(16):
             self.table[f"R{i}"] = i
+        self.table["SP"] = 0
+        self.table["LCL"] = 1
+        self.table["ARG"] = 2
+        self.table["THIS"] = 3
+        self.table["THAT"] = 4
+        self.table["SCREEN"] = 16384
+        self.table["KBD"] = 24576
         self.nextAddress = 16
 
     def getAddress(self, sym: str, value=""):
